@@ -11,6 +11,9 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+# POC specific environment files
+src/poc/**/.env
+src/poc/**/.env.local
 
 # Logs
 logs

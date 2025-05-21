@@ -7,8 +7,10 @@
     "start": "node dist/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' ${npm_config_file:-src/index.ts}",
     "dev:ranking": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/poc/ranking-api/index.ts",
+    "dev:rabbitmq": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/poc/rabbit-mq/index.ts",
     "poc": "ts-node",
     "list": "find src/poc -mindepth 1 -maxdepth 1 -type d | sort",
+    "copy:env": "find src/poc -name '.env.sample' -exec bash -c 'ENV_FILE=\"${0%.sample}\" && cp -n \"$0\" \"$ENV_FILE\" && echo \"Created: $ENV_FILE\"' {} \\;",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,9 +18,13 @@
   "license": "ISC",
   "description": "Proof of Concept Repository",
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/node": "^22.15.21",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0"
   }
 }

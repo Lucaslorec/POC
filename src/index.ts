@@ -13,17 +13,30 @@
 
 // Import all POCs
 import { RankingApi } from './poc/ranking-api';
-// import { RabbitMqExample } from './poc/rabbit-mq'; // Uncomment when implemented
+import { RabbitMqExample } from './poc/rabbit-mq';
 
 // Export all POCs with documentation
 export default {
     /**
      * Ranking API - Demonstrates a simple ranking system
+     * Environment variables:
+     * - API_PORT: Port for the API server
+     * - API_KEY: Authentication key
+     * - DATA_SOURCE_URL: Data source URL
+     * - LOG_LEVEL: Logging level (debug, info, warn, error)
      */
     rankingApi: RankingApi,
 
     /**
-     * Additional POCs can be added here
+     * RabbitMQ Example - Demonstrates RabbitMQ integration
+     * Environment variables:
+     * - RABBITMQ_HOST: RabbitMQ server host
+     * - RABBITMQ_PORT: RabbitMQ server port
+     * - RABBITMQ_USERNAME: RabbitMQ username
+     * - RABBITMQ_PASSWORD: RabbitMQ password
+     * - RABBITMQ_VHOST: RabbitMQ virtual host
+     * - QUEUE_NAME: Queue name
+     * - EXCHANGE_NAME: Exchange name
      */
-    // rabbitMq: RabbitMqExample,
+    rabbitMq: RabbitMqExample,
 };
