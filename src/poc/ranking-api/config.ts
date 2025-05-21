@@ -51,7 +51,7 @@ export const config: RankingApiConfig = {
     apiKey: getEnvVar('API_KEY'),
     dataSourceUrl: getEnvVar('DATA_SOURCE_URL', 'https://api-airbnb.rebelinternet.eu/api/airbnb/v1'),
     requestTimeoutMs: parseInt(getEnvVar('REQUEST_TIMEOUT_MS', '30000'), 10),
-    logLevel: getEnvVar('LOG_LEVEL', 'info') as RankingApiConfig['logLevel'],
+    logLevel: getEnvVar('LOG_LEVEL', 'error') as RankingApiConfig['logLevel'],
 };
 
 export default config;

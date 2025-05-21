@@ -26,7 +26,10 @@ export async function withRetry<T>(
         // Use the retry-after header if available, otherwise use exponential backoff
         const retryAfter = error.retryAfter ? error.retryAfter * 1000 : Math.min(delay, maxDelay);
 
-        console.log(`Retrying after ${retryAfter / 1000}s... (${retries} attempts left)`);
+        // Only log if not in silent mode
+        if (process.env.DISABLE_LOGS !== 'true') {
+            console.log(`Retrying request... (${retries} attempts left)`);
+        }
         await new Promise(resolve => setTimeout(resolve, retryAfter));
 
         // Retry with exponential backoff

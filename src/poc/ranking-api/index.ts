@@ -5,7 +5,7 @@ import { QueryCreationResponse, QueryResult } from './models/types';
 export interface IRankingApi {
     trackRankings(location: string, checkin: string, checkout: string,
         adults?: number, children?: number, infants?: number): Promise<QueryCreationResponse>;
-    getRankingResults(queryId: string, page?: number, pageSize?: number, 
+    getRankingResults(queryId: string, page?: number, pageSize?: number,
         sortBy?: 'price' | 'rating' | 'position', sortDirection?: 'asc' | 'desc'): Promise<any>;
     getActiveQueries(): Promise<QueryCreationResponse[]>;
     getRawRankingResults(queryId: string, page?: number, pageSize?: number,
@@ -18,70 +18,70 @@ export class RankingApi implements IRankingApi {
 
     constructor(service?: IRankingService) {
         this.service = service || createRankingService();
-        console.log('Ranking API initialized');
-        console.log(`Base URL: ${config.dataSourceUrl}`);
-        console.log(`Log level: ${config.logLevel}`);
+        if (config.logLevel === 'debug') {
+            console.log('Ranking API initialized');
+        }
     }
 
     async trackRankings(location: string, checkin: string, checkout: string,
-                      adults = 2, children = 0, infants = 0): Promise<QueryCreationResponse> {
-        console.log(`Starting to track rankings for ${location} from ${checkin} to ${checkout}`);
+        adults = 2, children = 0, infants = 0): Promise<QueryCreationResponse> {
+        // Removed logging to reduce verbosity
         return this.service.trackRankings(location, checkin, checkout, adults, children, infants);
     }
 
     async getRankingResults(queryId: string, page?: number, pageSize?: number,
-                           sortBy?: 'price' | 'rating' | 'position', sortDirection?: 'asc' | 'desc') {
-        console.log(`Fetching ranking results for query ID: ${queryId}${page ? ` (page ${page})` : ''}${sortBy ? ` (sorted by ${sortBy})` : ''}`);
+        sortBy?: 'price' | 'rating' | 'position', sortDirection?: 'asc' | 'desc') {
+        // Removed logging to reduce verbosity
         const results = await this.service.getRankingResults(queryId, page, pageSize);
         let transformedResults = this.service.transformResults(results);
-        
+
         // Apply sorting if specified
         if (sortBy) {
             transformedResults = this.sortResults(transformedResults, sortBy, sortDirection || 'asc');
         }
-        
+
         return transformedResults;
     }
 
     async getActiveQueries(): Promise<QueryCreationResponse[]> {
-        console.log('Fetching all active tracking queries');
+        // Removed logging to reduce verbosity
         return this.service.getActiveQueries();
     }
 
     async getRawRankingResults(queryId: string, page?: number, pageSize?: number,
-                              sortBy?: 'price' | 'rating' | 'position', sortDirection?: 'asc' | 'desc'): Promise<QueryResult> {
+        sortBy?: 'price' | 'rating' | 'position', sortDirection?: 'asc' | 'desc'): Promise<QueryResult> {
         const results = await this.service.getRankingResults(queryId, page, pageSize);
-        
+
         // Apply sorting to the raw results if specified
         if (sortBy && results.listings) {
             results.listings = this.sortListings(results.listings, sortBy, sortDirection || 'asc');
         }
-        
+
         return results;
     }
-    
+
     // Helper method to sort transformed results
     private sortResults(results: Array<{ id: string, name: string, position: number, score: number }>,
-                      sortBy: 'price' | 'rating' | 'position', sortDirection: 'asc' | 'desc') {
+        sortBy: 'price' | 'rating' | 'position', sortDirection: 'asc' | 'desc') {
         return [...results].sort((a, b) => {
             const factor = sortDirection === 'asc' ? 1 : -1;
-            
+
             if (sortBy === 'position') {
                 return (a.position - b.position) * factor;
             } else if (sortBy === 'rating' || sortBy === 'price') {
                 // For transformed results, we use the score as a proxy for rating/price
                 return (a.score - b.score) * factor;
             }
-            
+
             return 0;
         });
     }
-    
+
     // Helper method to sort raw listings
     private sortListings(listings: any[], sortBy: 'price' | 'rating' | 'position', sortDirection: 'asc' | 'desc') {
         return [...listings].sort((a, b) => {
             const factor = sortDirection === 'asc' ? 1 : -1;
-            
+
             if (sortBy === 'position') {
                 return (a.position - b.position) * factor;
             } else if (sortBy === 'rating' && a.rating && b.rating) {
@@ -89,7 +89,7 @@ export class RankingApi implements IRankingApi {
             } else if (sortBy === 'price' && a.price && b.price) {
                 return (a.price.rate - b.price.rate) * factor;
             }
-            
+
             return 0;
         });
     }
@@ -211,12 +211,12 @@ if (require.main === module) {
                 // Try with real API first
                 const results = await api.getRankingResults(query.id);
                 console.log('Ranking Results:', results);
-                
+
                 // Try with sorting
                 console.log('\nSorting results by price (lowest to highest):');
                 const sortedByPrice = await api.getRankingResults(query.id, 1, 10, 'price', 'asc');
                 console.log('Sorted by price:', sortedByPrice);
-                
+
                 console.log('\nSorting results by rating (highest to lowest):');
                 const sortedByRating = await api.getRankingResults(query.id, 1, 10, 'rating', 'desc');
                 console.log('Sorted by rating:', sortedByRating);
@@ -230,7 +230,7 @@ if (require.main === module) {
                     return service.transformResults(sampleData.queryResults);
                 });
                 console.log('Sample ranking results:', sampleResults);
-                
+
                 // Demonstrate sorting with sample data
                 console.log('\nSorting sample results by price (lowest to highest):');
                 const sortedByPrice = await api.getRankingResults(query.id, 1, 10, 'price', 'asc')

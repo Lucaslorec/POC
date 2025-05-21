@@ -1,4 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import https from 'https';
+import http from 'http';
 import { config } from '../config';
 import { QueryCreationResponse, QueryResult, RankingQuery } from '../models/types';
 import { withRetry } from '../utils/retries';
@@ -13,16 +15,21 @@ export class RankingClient implements IRankingClient {
     private axiosInstance: AxiosInstance;
 
     constructor() {
+        // Create silent agents to prevent verbose logging
+        const httpAgent = new http.Agent({ keepAlive: true });
+        const httpsAgent = new https.Agent({ keepAlive: true });
+
         this.axiosInstance = axios.create({
             baseURL: config.dataSourceUrl,
             timeout: config.requestTimeoutMs,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'x-api-key': `${config.apiKey}`
-            }
+                'x-api-key': config.apiKey
+            },
+            httpAgent,
+            httpsAgent
         });
-
     }
 
     async createQuery(query: RankingQuery): Promise<QueryCreationResponse> {
@@ -31,8 +38,10 @@ export class RankingClient implements IRankingClient {
                 const response = await this.axiosInstance.post<QueryCreationResponse>('/query', query);
                 return response.data;
             });
-        } catch (error) {
-            console.error('Error creating query:', error);
+        } catch (error: any) {
+            if (config.logLevel !== 'error') {
+                console.error('Error creating query:', error.message || 'Unknown error');
+            }
             throw error;
         }
     }
@@ -47,8 +56,10 @@ export class RankingClient implements IRankingClient {
                 const response = await this.axiosInstance.get<QueryResult>(`/query/${queryId}`, { params });
                 return response.data;
             });
-        } catch (error) {
-            console.error(`Error getting results for query ${queryId}:`, error);
+        } catch (error: any) {
+            if (config.logLevel !== 'error') {
+                console.error(`Error getting results for query ${queryId}:`, error.message || 'Unknown error');
+            }
             throw error;
         }
     }
@@ -59,8 +70,10 @@ export class RankingClient implements IRankingClient {
                 const response = await this.axiosInstance.get<QueryCreationResponse[]>('/query');
                 return response.data;
             });
-        } catch (error) {
-            console.error('Error listing queries:', error);
+        } catch (error: any) {
+            if (config.logLevel !== 'error') {
+                console.error('Error listing queries:', error.message || 'Unknown error');
+            }
             throw error;
         }
     }
