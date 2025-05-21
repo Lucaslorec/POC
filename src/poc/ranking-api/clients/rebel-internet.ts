@@ -15,7 +15,7 @@ class rebelInternetClient {
         }
     }
 
-    factory() {
+    static factory() {
         const baseUrl = config.dataSourceUrl
         const apiKey = config.apiKey
         return new rebelInternetClient(baseUrl, apiKey);
