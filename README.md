@@ -34,10 +34,19 @@ npm install
 ### Development
 
 ```bash
-# Run in development mode with hot-reload
-npm run dev
+# List all available POCs
+npm run list
 
-# Build the project
+# Run a specific POC directly (example for ranking API)
+npm run dev:ranking
+
+# Run any specific POC file with the dev script
+npm run dev --file=src/poc/ranking-api/index.ts
+
+# Run any TypeScript file directly with ts-node
+npm run poc src/poc/ranking-api/index.ts
+
+# Build all POCs
 npm run build
 
 # Run the built project

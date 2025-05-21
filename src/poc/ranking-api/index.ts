@@ -19,6 +19,8 @@ export class RankingApi {
     }
 }
 
-// Example usage
-// const api = new RankingApi();
-// console.log(api.getRankings());
+// Example usage - this will run when the file is executed directly
+if (require.main === module) {
+    const api = new RankingApi();
+    console.log('Ranking Results:', api.getRankings());
+}
