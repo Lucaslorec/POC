@@ -50,7 +50,7 @@ export class rankingApi {
                 neLng: null,
                 swLat: null,
                 swLng: null,
-                zoomLevel: null,
+                zoomLevel: 12.5,
                 query: location
             }
         });
@@ -65,7 +65,7 @@ export class rankingApi {
         return response;
     }
 
-    async getLatestRankings(id: number) {
+    async getLatestRankings(queryId: number) {
         const today = new Date();
         const lastWeek = new Date(today);
         lastWeek.setDate(today.getDate() - 7);
@@ -73,6 +73,30 @@ export class rankingApi {
         const fromDate = lastWeek.toISOString().split('T')[0];
         const untilDate = today.toISOString().split('T')[0];
 
-        return this.getRankings(id, fromDate, untilDate);
+        return this.getRankings(queryId, fromDate, untilDate);
     }
+}
+
+// Example usage
+if (require.main === module) {
+    (async () => {
+        try {
+            // Create an instance of the API
+            const api = new rankingApi();
+
+            // Query rankings with ID 31 and specified date range
+            console.log('Fetching rankings for query ID 31...');
+            const rankings = await api.getRankings(31, '2025-05-09', '2025-05-18');
+
+            // Display the results
+            console.log('Rankings found:', rankings.data);
+
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error('Error fetching rankings:', error.message);
+            } else {
+                console.error('Error fetching rankings:', error);
+            }
+        }
+    })();
 }

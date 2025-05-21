@@ -45,7 +45,7 @@ class rebelInternetClient {
         from: string;
         until: string;
     }) {
-        return axios.get(`${this.baseUrl}/query/${params.id}`, {
+        return axios.get(`${this.baseUrl}/query/${params.id}/ranks`, {
             params: {
                 from: params.from,
                 until: params.until,
