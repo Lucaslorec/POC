@@ -22,8 +22,11 @@ export interface RankingApiConfig {
     /** API key for authentication */
     apiKey: string;
 
-    /** URL of the data source */
+    /** Base URL of the Airbnb ranking API */
     dataSourceUrl: string;
+
+    /** Timeout for API requests in milliseconds */
+    requestTimeoutMs: number;
 
     /** Logging level (debug, info, warn, error) */
     logLevel: 'debug' | 'info' | 'warn' | 'error';
@@ -46,7 +49,8 @@ function getEnvVar(key: string, defaultValue?: string): string {
 export const config: RankingApiConfig = {
     port: parseInt(getEnvVar('API_PORT', '3000'), 10),
     apiKey: getEnvVar('API_KEY'),
-    dataSourceUrl: getEnvVar('DATA_SOURCE_URL'),
+    dataSourceUrl: getEnvVar('DATA_SOURCE_URL', 'https://api-airbnb.rebelinternet.eu/api/airbnb/v1'),
+    requestTimeoutMs: parseInt(getEnvVar('REQUEST_TIMEOUT_MS', '30000'), 10),
     logLevel: getEnvVar('LOG_LEVEL', 'info') as RankingApiConfig['logLevel'],
 };
 

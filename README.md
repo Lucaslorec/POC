@@ -15,7 +15,13 @@ src/
 
 ### Ranking API
 
-A proof of concept implementation of a ranking system API.
+A proof of concept implementation that integrates with the Airbnb API to track property rankings in search results. Features:
+
+- Factory pattern for dependency injection
+- Pagination support for large result sets
+- Rate limiting detection and handling with exponential backoff
+- Well-structured layered architecture
+- Strong TypeScript typing
 
 ## Getting Started
 
